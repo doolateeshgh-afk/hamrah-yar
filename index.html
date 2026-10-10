@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1457d9">
+<title>همراه‌یار | دستیار هوشمند فارسی</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f6fc;color:#17233c;line-height:1.9}
+header{background:linear-gradient(135deg,#1457d9,#713be8);color:white;padding:30px 18px;text-align:center}
+header h1{margin:0;font-size:30px}
+header p{margin:8px 0 0;font-size:14px}
+main{max-width:760px;margin:25px auto;padding:0 14px}
+.card{background:white;padding:22px;border-radius:18px;box-shadow:0 5px 25px #142d5910;margin-bottom:18px}
+h2{font-size:19px;margin-top:0}
+label{display:block;font-weight:bold;margin:13px 0 6px}
+select,textarea,input{width:100%;padding:13px;border:1px solid #d8dfeb;border-radius:10px;font-family:inherit;font-size:14px;background:white}
+textarea{min-height:145px;resize:vertical}
+button{border:0;border-radius:10px;padding:13px 18px;font-family:inherit;font-size:15px;font-weight:bold;cursor:pointer}
+.primary{width:100%;margin-top:16px;background:#1457d9;color:white}
+.primary:active{transform:scale(.99)}
+.secondary{background:#eaf0ff;color:#1457d9;margin-top:10px}
+.result{white-space:pre-wrap;background:#f5f7fc;border:1px solid #e1e7f1;border-radius:10px;padding:15px;min-height:70px;overflow-wrap:anywhere}
+.hidden{display:none}
+.tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}
+.tool{background:#f0f4ff;color:#234b9b;border:1px solid #e0e8ff}
+.tool.active{background:#1457d9;color:white}
+footer{text-align:center;color:#758099;font-size:12px;padding:20px}
+.note{font-size:12px;color:#68758c}
+@media(min-width:600px){.tools{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>همراه‌یار</h1>
+  <p>دستیار فارسی شما برای نوشتن، یادگیری و ایده‌پردازی</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>سلام! چطور کمکت کنم؟ 🌱</h2>
+    <p>یکی از ابزارها را انتخاب کن و درخواستت را بنویس.</p>
+
+    <div class="tools">
+      <button class="tool active" data-type="reply">💬 پاسخ به پیام</button>
+      <button class="tool" data-type="rewrite">✍️ بازنویسی متن</button>
+      <button class="tool" data-type="letter">📄 نامه و درخواست</button>
+      <button class="tool" data-type="summary">📝 خلاصه‌سازی</button>
+      <button class="tool" data-type="explain">📚 توضیح ساده</button>
+      <button class="tool" data-type="idea">💡 ایده‌پردازی</button>
+    </div>
+
+    <label for="tone">لحن پاسخ</label>
+    <select id="tone">
+      <option value="formal">رسمی و محترمانه</option>
+      <option value="friendly">صمیمی و دوستانه</option>
+      <option value="professional">حرفه‌ای و دقیق</option>
+      <option value="short">کوتاه و مختصر</option>
+    </select>
+
+    <label for="input">متن یا درخواستت را بنویس</label>
+    <textarea id="input" placeholder="مثلاً: یک پاسخ محترمانه برای تشکر از استاد بنویس..."></textarea>
+
+    <button class="primary" id="run">✨ آماده‌سازی پاسخ</button>
+    <p class="note">این نسخه نمایشی است و هنوز به هوش مصنوعی آنلاین متصل نشده است.</p>
+  </section>
+
+  <section class="card hidden" id="outputCard">
+    <h2>پاسخ همراه‌یار</h2>
+    <div class="result" id="output"></div>
+    <button class="secondary" id="copy">کپی پاسخ</button>
+  </section>
+</main>
+
+<footer>
+  همراه‌یار | نسخه آزمایشی
+  <br>
+  ابزار کمکی برای نوشتن و یادگیری
+</footer>
+
+<script>
+let selectedType = "reply";
+
+const buttons = document.querySelectorAll(".tool");
+
+buttons.forEach(button => {
+  button.addEventListener("click", () => {
+    buttons.forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+    selectedType = button.dataset.type;
+  });
+});
+
+document.getElementById("run").addEventListener("click", () => {
+  const input = document.getElementById("input").value.trim();
+  const tone = document.getElementById("tone").value;
+
+  if (!input) {
+    alert("لطفاً ابتدا متن یا درخواستت را بنویس.");
+    return;
+  }
+
+  let result = "";
+
+  if (selectedType === "reply") {
+    result = tone === "friendly"
+      ? "سلام، خیلی ممنون از پیام محبت‌آمیزت. خوشحالم که با من در ارتباطی.\n\n" + input
+      : "با سلام و احترام\n\nاز پیام شما سپاسگزارم. از لطف و توجه شما صمیمانه قدردانی می‌کنم.\n\nبا احترام";
+  }
+
+  else if (selectedType === "rewrite") {
+    result = "متن بازنویسی‌شده:\n\n" + input +
+      "\n\nتوجه: برای بازنویسی واقعی و دقیق، این نسخه باید به هوش مصنوعی متصل شود.";
+  }
+
+  else if (selectedType === "letter") {
+    result = "موضوع: درخواست\n\nبا سلام و احترام\n\n" + input +
+      "\n\nخواهشمند است دستور فرمایید موضوع بررسی و نتیجه اعلام شود.\n\nبا تجدید احترام\nنام و نام خانوادگی";
+  }
+
+  else if (selectedType === "summary") {
+    result = "متن دریافتی:\n\n" + input +
+      "\n\nبرای تهیه خلاصه دقیق و استخراج نکات اصلی، اتصال به هوش مصنوعی لازم است.";
+  }
+
+  else if (selectedType === "explain") {
+    result = "موضوع موردنظر:\n\n" + input +
+      "\n\nبرای ارائه توضیح ساده، دقیق و متناسب با سطح دانش شما، اتصال به هوش مصنوعی لازم است.";
+  }
+
+  else if (selectedType === "idea") {
+    result = "موضوع ایده‌پردازی:\n\n" + input +
+      "\n\nبرای تولید ایده‌های متنوع و اختصاصی، اتصال به هوش مصنوعی لازم است.";
+  }
+
+  if (tone === "short") {
+    result = result.length > 350 ? result.slice(0, 350) + "..." : result;
+  }
+
+  document.getElementById("output").textContent = result;
+  document.getElementById("outputCard").classList.remove("hidden");
+  document.getElementById("outputCard").scrollIntoView({behavior:"smooth"});
+});
+
+document.getElementById("copy").addEventListener("click", async () => {
+  const text = document.getElementById("output").textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("پاسخ کپی شد.");
+  } catch (e) {
+    const area = document.createElement("textarea");
+    area.value = text;
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+    alert("پاسخ کپی شد.");
+  }
+});
+</script>
+
+</body>
+  </html>
